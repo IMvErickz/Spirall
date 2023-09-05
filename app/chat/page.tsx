@@ -1,6 +1,35 @@
+'use client'
+
+import { InputArea } from "@/components/Chats/SendMessage/InputArea";
+import { api } from "@/lib/axios";
 import { MoreVertical, SendHorizontal, UserCircle } from "lucide-react";
+import { FormEvent, useState } from "react";
+
+interface DataProps {
+    Message: string
+}
 
 export default function Chat() {
+
+    const [message, setMessage] = useState('')
+    const [data, setData] = useState<DataProps[]>([])
+
+    async function handleSendMessage(event: FormEvent) {
+        event.preventDefault()
+        if (!message) {
+            alert('Não há nenhuma menssagem para enviar')
+        } else {
+            const handleMessageTrim = message.trim()
+            await api.post('/send', {
+                message: handleMessageTrim
+            })
+                .then(function (response) {
+                    setData([response.data])
+                })
+        }
+
+    }
+
     return (
         <main className="w-full flex flex-col items-start justify-center bg-zinc-900">
             <header className="w-full h-28 flex flex-row items-center justify-center bg-zinc-950">
@@ -12,17 +41,14 @@ export default function Chat() {
                     <MoreVertical color="white" size={60} />
                 </div>
             </header>
-            <section className="w-full h-full flex"></section>
-            <section className="w-full h-28 flex flex-row items-center justify-center bg-zinc-950">
-                <div className="w-full h-full flex items-center justify-center px-8">
-                    <input type="text" className="w-full h-14 bg-zinc-700 rounded-lg" />
-                </div>
-                <div className="w-max flex items-center justify-center pr-4">
-                    <button className="bg-violet-950 w-24 h-14 flex items-center justify-center rounded-lg hover:bg-violet-800 transition-colors">
-                        <SendHorizontal color="white" size={40} />
-                    </button>
-                </div>
+            <section className="w-full h-full flex">
+                {data.map(d => {
+                    return (
+                        <span className="text-white">{d.Message}</span>
+                    )
+                })}
             </section>
+            <InputArea onSubmit={handleSendMessage} onChange={event => setMessage(event.target.value)} />
         </main>
     )
 }

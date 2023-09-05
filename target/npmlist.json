@@ -1,0 +1,1 @@
+{"version":"0.1.0","name":"web","dependencies":{"@types/node":{"version":"20.5.7"},"@types/react-dom":{"version":"18.2.7"},"@types/react":{"version":"18.2.21"},"lucide-react":{"version":"0.274.0"},"next":{"version":"13.4.19"},"react-dom":{"version":"18.2.0"},"react":{"version":"18.2.0"},"socket.io":{"version":"4.7.2"},"typescript":{"version":"5.2.2"}}}
