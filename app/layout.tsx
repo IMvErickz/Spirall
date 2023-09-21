@@ -1,7 +1,7 @@
-import { Aside } from '@/components/Chats/Aside/Aside'
 import './globals.css'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
+import { LayoutProvider } from '@/components/Layout/LayoutProvider'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -15,11 +15,12 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
+
   return (
     <html lang="en">
       <body className={inter.className}>
         <main className='w-screen h-screen flex'>
-          <Aside />
+          <LayoutProvider />
           <div className='w-full h-full flex'>
             {children}
           </div>
