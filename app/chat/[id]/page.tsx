@@ -3,44 +3,37 @@
 import { InputArea } from "@/components/Chats/SendMessage/InputArea";
 import { api } from "@/lib/axios";
 import { MoreVertical, SendHorizontal, UserCircle } from "lucide-react";
-import { useRouter } from "next/router";
 import { FormEvent, useEffect, useState } from "react";
+import io from 'socket.io-client';
 
 interface DataProps {
     Message: string
 }
 
+const socket = io('http://localhost:3333');
+
 export default function Chat({ params }: { params: { id: string } }) {
 
     const [message, setMessage] = useState('')
-    const [data, setData] = useState<DataProps[]>([])
-
-    async function handleSendMessage(event: FormEvent) {
-        event.preventDefault()
-        if (!message) {
-            alert('Não há nenhuma menssagem para enviar')
-        } else {
-            const handleMessageTrim = message.trim()
-            await api.post('/send', {
-                message: handleMessageTrim
-            })
-                .then(response => {
-                    setData([response.data])
-                    setMessage('')
-                })
-        }
-
-    }
+    const [data, setData] = useState<string[]>([])
 
     useEffect(() => {
-        data.map(e => {
-            const li = (document.getElementById('li') as HTMLLIElement)
-            const span = (document.createElement('span') as HTMLSpanElement)
-            span.className = 'text-white'
-            span.innerText = e.Message
-            li.appendChild(span)
-        })
-    }, [data])
+        // Configuração do evento de recebimento de mensagem
+        socket.on('chat message', (msg) => {
+            setData([...data, msg]);
+        });
+
+        // Limpeza de eventos quando o componente é desmontado
+        return () => {
+            socket.off('chat message');
+        };
+    }, [data]);
+
+    const handleSendMessage = (e: FormEvent<Element>) => {
+        e.preventDefault();
+        socket.emit('chat message', message);
+        setMessage('');
+    };
 
     return (
         <main className="w-full flex flex-col items-start justify-center bg-zinc-900">
@@ -56,7 +49,11 @@ export default function Chat({ params }: { params: { id: string } }) {
             <section className="w-full h-full flex">
                 <ul>
                     <li id="li" className="w-full flex flex-col items-start justify-center">
-
+                        {data.map(msg => {
+                            return (
+                                <span className="text-white text-xl">{msg}</span>
+                            )
+                        })}
                     </li>
                 </ul>
             </section>

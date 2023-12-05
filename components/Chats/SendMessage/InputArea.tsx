@@ -4,7 +4,7 @@ import { SendHorizontal } from "lucide-react"
 import { FormEvent, InputHTMLAttributes } from "react"
 
 interface Props extends InputHTMLAttributes<HTMLInputElement> {
-    onSubmit: (event: FormEvent<Element>) => Promise<void>
+    onSubmit: (event: FormEvent<Element>) => void
 }
 
 export function InputArea({ onSubmit, ...rest }: Props) {
