@@ -19,19 +19,19 @@ export default function Chat({ params }: { params: { id: string } }) {
 
     useEffect(() => {
         // Configuração do evento de recebimento de mensagem
-        socket.on('chat message', (msg) => {
+        socket.on(params.id, (msg) => {
             setData([...data, msg]);
         });
 
         // Limpeza de eventos quando o componente é desmontado
         return () => {
-            socket.off('chat message');
+            socket.off(params.id);
         };
     }, [data]);
 
     const handleSendMessage = (e: FormEvent<Element>) => {
         e.preventDefault();
-        socket.emit('chat message', message);
+        socket.emit(params.id, message)
         setMessage('');
     };
 
