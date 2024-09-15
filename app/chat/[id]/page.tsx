@@ -21,20 +21,15 @@ export default function Chat({ params }: { params: { id: string } }) {
 
     useEffect(() => {
         // Configuração do evento de recebimento de mensagem
-        const handleNewMessage = (data: any) => {
-            // Verifica se o evento recebido tem o mesmo id
-            if (data.eventName === params.id) {
-                setData((prevData) => [...prevData, data.message]);
-            }
-        };
-    
-        socket.on('dynamicEvent', handleNewMessage);
-    
+        socket.on(params.id, (msg) => {
+            setData([...data, msg]);
+        });
+
         // Limpeza de eventos quando o componente é desmontado
         return () => {
-            socket.off('dynamicEvent', handleNewMessage);
+            socket.off(params.id);
         };
-    }, [params.id]);
+    }, [data]);
 
     const handleSendMessage = (e: FormEvent<Element>) => {
         e.preventDefault();
