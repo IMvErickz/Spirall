@@ -10,9 +10,7 @@ interface DataProps {
     Message: string
 }
 
-const socket = io(String(process.env.NEXT_PUBLIC_API_URL),{
-    transports: ['websocket']
-});
+const socket = io(String(process.env.NEXT_PUBLIC_API_URL));
 
 export default function Chat({ params }: { params: { id: string } }) {
 
