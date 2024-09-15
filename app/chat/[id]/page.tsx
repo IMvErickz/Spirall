@@ -25,6 +25,8 @@ export default function Chat({ params }: { params: { id: string } }) {
             setData([...data, msg]);
         });
 
+        socket.emit('dynamic event', {eventName: params.id, message})
+
         // Limpeza de eventos quando o componente é desmontado
         return () => {
             socket.off(params.id);
