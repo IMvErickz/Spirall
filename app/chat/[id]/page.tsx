@@ -36,6 +36,7 @@ export default function Chat({ params }: { params: { id: string } }) {
     const handleSendMessage = (e: FormEvent<Element>) => {
         e.preventDefault();
         socket.emit(params.id, message)
+        socket.emit('dynamic event', {eventName: params.id, message})
         setMessage('');
     };
 
